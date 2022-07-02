@@ -24,7 +24,7 @@ public class MessageHandler {
 
         SendMessage sendMessage = null;
 
-        if (update.getMessage().getText().equals("/start") && userService.findByUserId(update.getMessage().getFrom().getId()) == null) {
+        if (update.getMessage().getText().equals("/start")) {
             User user = new User();
             user.setUserId(update.getMessage().getFrom().getId());
             user.setNickname(update.getMessage().getFrom().getUserName());

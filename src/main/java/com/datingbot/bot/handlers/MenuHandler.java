@@ -310,7 +310,7 @@ public class MenuHandler {
                 break;
             case UKRAINIAN:
 
-                if (update.getMessage().getText().equals("Я хлопець") || update.getMessage().getText().equals("Я девушка")) {
+                if (update.getMessage().getText().equals("Я хлопець") || update.getMessage().getText().equals("Я дівчина")) {
 
                     if (update.getMessage().getText().equals("Я хлопець")) {
                         user.setSex(0);

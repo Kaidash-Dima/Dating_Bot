@@ -13,6 +13,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public long getCountUsers(){
+        return userRepository.count();
+    }
+
     public User getFirstUser(){
         return userRepository.findTopByOrderByIdAsc();
     }

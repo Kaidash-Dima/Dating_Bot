@@ -20,13 +20,28 @@ public class MessageHandler {
         this.menuHandler = menuHandler;
     }
 
-    public SendMessage handle(Update update){
-        long id = update.getMessage().getFrom().getId();
-        User user = userService.findByUserId(id);
+    public SendMessage handle(Update update) {
 
         SendMessage sendMessage = null;
 
-        if (user != null) {
+        if (update.getMessage().getText().equals("/start") && userService.findByUserId(update.getMessage().getFrom().getId()) == null) {
+            User user = new User();
+            user.setUserId(update.getMessage().getFrom().getId());
+            user.setNickname(update.getMessage().getFrom().getUserName());
+            user.setName(update.getMessage().getFrom().getFirstName());
+            if (userService.getCountUsers() == 0) {
+                user.setOppositeSexId(1);
+            }else{
+                user.setOppositeSexId(userService.getFirstUser().getId());
+            }
+            user.setLanguage(Language.RUSSIAN);
+            user.setChatStatus(ChatStatus.REGISTRATION);
+            userService.saveUser(user);
+            sendMessage = menuHandler.displayLanguageQuestion(update, user);
+
+        } else {
+            User user = userService.findByUserId(update.getMessage().getFrom().getId());
+
             menuHandler.determineStatus(update, user);
 
             switch (user.getChatStatus()) {
@@ -35,9 +50,9 @@ public class MessageHandler {
                     break;
                 case LANGUAGE:
                     menuHandler.setLanguageProfile(update, user);
-                    if(user.getAge() == 0){
+                    if (user.getAge() == 0) {
                         sendMessage = menuHandler.startProfile(update, user);
-                    }else {
+                    } else {
                         sendMessage = menuHandler.waitingProfile(update, user);
                     }
                     break;
@@ -76,22 +91,7 @@ public class MessageHandler {
                     sendMessage = menuHandler.waitingProfile(update, user);
                     break;
             }
-        }else {
-            user = new User();
-            user.setUserId(update.getMessage().getFrom().getId());
-            user.setNickname(update.getMessage().getFrom().getUserName());
-            user.setName(update.getMessage().getFrom().getFirstName());
-            if (userService.getFirstUser() == null){
-                user.setOppositeSexId(1);
-            }else {
-                user.setOppositeSexId(userService.getFirstUser().getId());
-            }
-            user.setLanguage(Language.RUSSIAN);
-            user.setChatStatus(ChatStatus.REGISTRATION);
-            userService.saveUser(user);
-            sendMessage = menuHandler.displayLanguageQuestion(update, user);
         }
-
         return sendMessage;
     }
 }

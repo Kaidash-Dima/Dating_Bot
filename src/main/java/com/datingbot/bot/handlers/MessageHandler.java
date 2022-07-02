@@ -35,7 +35,11 @@ public class MessageHandler {
                     break;
                 case LANGUAGE:
                     menuHandler.setLanguageProfile(update, user);
-                    sendMessage = menuHandler.waitingProfile(update, user);
+                    if(user.getAge() == 0){
+                        sendMessage = menuHandler.startProfile(update, user);
+                    }else {
+                        sendMessage = menuHandler.waitingProfile(update, user);
+                    }
                     break;
                 case START:
                     sendMessage = menuHandler.startProfile(update, user);
@@ -77,7 +81,11 @@ public class MessageHandler {
             user.setUserId(update.getMessage().getFrom().getId());
             user.setNickname(update.getMessage().getFrom().getUserName());
             user.setName(update.getMessage().getFrom().getFirstName());
-            user.setOppositeSexId(userService.getFirstUser().getId());
+            if (userService.getFirstUser() == null){
+                user.setOppositeSexId(1);
+            }else {
+                user.setOppositeSexId(userService.getFirstUser().getId());
+            }
             user.setLanguage(Language.RUSSIAN);
             user.setChatStatus(ChatStatus.REGISTRATION);
             userService.saveUser(user);

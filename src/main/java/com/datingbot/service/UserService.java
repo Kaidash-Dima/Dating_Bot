@@ -5,12 +5,11 @@ import com.datingbot.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
 
     public long getCountUsers(){
@@ -25,18 +24,22 @@ public class UserService {
         return userRepository.findTopByOrderByIdDesc();
     }
 
-    public Long nextId(){
-        Long temp;
+    public User nextProfile(long oppositeSexId, int oppositeSex) {
+        List<User> users = userRepository.findAllBySex(oppositeSex);
+        User user = new User();
+        users.sort(Comparator.comparingInt(o -> (int) o.getId()));
 
-        do {
-            temp = userRepository.getNextSeriesId();
-        }while (findById(temp) == null);
-
-        return temp;
-    }
-
-    public void resetId(long id){
-        userRepository.resetSeries(id);
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId() == oppositeSexId) {
+                if (oppositeSexId == users.get(users.size() - 1).getId()){
+                    user = users.get(0);
+                }else {
+                    user = findById(users.get(i + 1).getId());
+                }
+                break;
+            }
+        }
+        return user;
     }
 
     public User findById(long id){

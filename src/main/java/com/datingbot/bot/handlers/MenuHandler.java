@@ -671,28 +671,9 @@ public class MenuHandler {
             user.setChatStatus(ChatStatus.DISLIKE);
         }
 
-        long nextId = 0;
-        boolean temp = true;
-        if (update.getMessage().getText().equals("2")){
-            userService.resetId(user.getOppositeSexId() - 1);
-        }
+        oppositeUser = userService.nextProfile(user.getOppositeSexId(), user.getOppositeSex());
 
-        do{
-            if (user.getOppositeSexId() >= userService.getLastUser().getId() || nextId >= userService.getLastUser().getId()){
-                oppositeUser = userService.getFirstUser();
-                userService.resetId(oppositeUser.getId());
-                nextId = oppositeUser.getId();
-            }else {
-                if (temp) {
-                    userService.resetId(user.getOppositeSexId());
-                    temp = false;
-                }
-                nextId = userService.nextId();
-                oppositeUser = userService.findById(nextId);
-            }
-        }while (user.getOppositeSex() != oppositeUser.getSex());
-
-        user.setOppositeSexId(nextId);
+        user.setOppositeSexId(oppositeUser.getId());
         userService.saveUser(user);
 
         return SendMessage.builder().chatId(String.valueOf(update.getMessage().getChatId()))

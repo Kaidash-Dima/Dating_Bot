@@ -20,26 +20,20 @@ public class UserService {
         return userRepository.findTopByOrderByIdAsc();
     }
 
-    public User getLastUser(){
-        return userRepository.findTopByOrderByIdDesc();
-    }
-
     public User nextProfile(long oppositeSexId, int oppositeSex) {
         List<User> users = userRepository.findAllBySex(oppositeSex);
-        User user = new User();
         users.sort(Comparator.comparingInt(o -> (int) o.getId()));
 
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId() == oppositeSexId) {
                 if (oppositeSexId == users.get(users.size() - 1).getId()){
-                    user = users.get(0);
+                    return users.get(0);
                 }else {
-                    user = findById(users.get(i + 1).getId());
+                    return findById(users.get(i + 1).getId());
                 }
-                break;
             }
         }
-        return user;
+        return users.get(0);
     }
 
     public User findById(long id){

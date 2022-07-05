@@ -9,8 +9,6 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findTopByOrderByIdDesc();
-
     User findTopByOrderByIdAsc();
 
     List<User> findAllBySex(int oppositeSex);

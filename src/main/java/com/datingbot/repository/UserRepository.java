@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllBySex(int oppositeSex);
 
     User findByUserId(long userId);
+
+    boolean existsByUserId(long userId);
 }

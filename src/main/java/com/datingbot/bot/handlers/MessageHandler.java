@@ -24,7 +24,8 @@ public class MessageHandler {
 
         SendMessage sendMessage = null;
 
-        if (update.getMessage().getText().equals("/start")) {
+        if (update.getMessage().getText().equals("/start") &&  !userService.existsByUserId(update.getMessage().getFrom().getId())) {
+            System.out.println(1);
             User user = new User();
             user.setUserId(update.getMessage().getFrom().getId());
             user.setNickname(update.getMessage().getFrom().getUserName());
@@ -40,6 +41,7 @@ public class MessageHandler {
             sendMessage = menuHandler.displayLanguageQuestion(update, user);
 
         } else {
+            System.out.println(2);
             User user = userService.findByUserId(update.getMessage().getFrom().getId());
 
             menuHandler.determineStatus(update, user);
